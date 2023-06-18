@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "convertio-python"
-version = "0.1.0"
+version = "0.1.1"
 description = "Convertio APIs Client Library for Python"
 authors = ["Okba Boularaoui <okba2fb@gmail.com>"]
 readme = "README.md"

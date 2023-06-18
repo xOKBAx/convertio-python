@@ -9,7 +9,7 @@ Feel free to use, improve or modify this wrapper! If you have questions contact 
 
 Requirements
 -------------------
-* [Python 3.9 or above](https://www.python.org/downloads/)
+* [Python 3.8 or above](https://www.python.org/downloads/)
 
 Developer Documentation
 -------------------
@@ -17,31 +17,42 @@ You can find full API reference here: https://convertio.co/api/docs/
 
 Quickstart
 -------------------
-Following example will render remote web page into PNG image:
+Initialize `convertio` client:
 ```python
+import os
+from convertio import client
 
+convertio = client.ConvertIO(api_key=os.environ.get('CONVERTIO_API_KEY'))
 ```
 
-Following example will convert local DOCX file to PDF:
+Following example will convert PNG file to PDF:
 ```python
+from convertio.models import parameters
 
-```
-
-Following example will extract clean text from DOCX:
-```python
-
-```
-
-Following example will override default API parameters in case you don't have SSL enabled in your PHP installation or want to limit execution time:
-```python
-
+# Example of converting a file
+payload = parameters.NewConversionParameters(
+    file="https://files.jotform.com/jotformapps/proforma-invoice-template-18a679482c789d2acf0db2d6f9324d94_og.png",
+    outputformat="PDF"
+)
+response = convertio.new_conversion(payload=payload)
 ```
 
 OCR Quickstart
 -------------------
 Following example will convert pages 1-3,5,7 of PDF into editable DOCX, using OCR (Optical Character Recognition) for English and Arabic languages (<a href="https://convertio.co/api/docs/#ocr_langs">Full list of available languages</a>):
 ```python
+from convertio.models import parameters
+from convertio.languages import Languages
 
+# OCR Example
+OCR_SETTINGS = parameters.OCRParameters.OCRSettings(langs=[Languages.ARABIC.value, Languages.ENGLISH.value])
+payload = parameters.NewConversionParameters(
+    file="https://files.jotform.com/jotformapps/proforma-invoice-template-18a679482c789d2acf0db2d6f9324d94_og.png",
+    outputformat="txt",
+    options=parameters.OCRParameters(ocr_enabled=True, ocr_settings=OCR_SETTINGS)
+)
+
+response = convertio.new_conversion(payload=payload)
 ```
 
 Installation
@@ -58,47 +69,8 @@ pip install convertio-python
 poetry add convertio-python
 ```
 
-Example with exceptions catching
--------------------
-The following example shows how to catch the different exception types which can occur at conversions:
-
-```python
-
-```
-
-Example of conversion process with callback URL
--------------------
-The following example is usable for conversions that is not instant and may require some time to complete. 
-In this case you may define the callback URL (<a href="https://convertio.co/api/docs/#options_callback">More info</a>), which gets notified when the conversion is over (either successful or not):
-
-##### Start conversion:
-```python
-
-```
-##### Callback handler example:
-The exception handling in this code snippet is essential. Conversion errors throw APIException which have to be handled properly. Please, read <a href="https://convertio.co/api/docs/#options_callback">more info about step parameter</a>.  
-```python
-
-```
-
-
-Example of conversion process being split on steps
--------------------
-The following example is usable for conversions that is not instant and may require some time to complete. 
-In this case you may get the conversion ID and check the conversion status later, omitting "->wait()" call and making conversion starting process instant:
-
-##### Start conversion:
-```python
-
-```
-##### Check conversion status and download the result:
-The exception handling in this code snippet is essential. Conversion errors throw APIException which have to be handled properly.  
-```python
-
-```
-
 Resources
 ---------
-
+* [Source Code](https://github.com/BeleganStartup/convertio-python)
 * [API Documentation](https://convertio.co/api/docs/)
 * [Conversion Types](https://convertio.co/formats)
