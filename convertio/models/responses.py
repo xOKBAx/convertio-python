@@ -116,9 +116,9 @@ class GetStatusResponse(BaseSuccessResponse):
 
         id: str
         step: str
-        step_percent: int
+        step_percent: int|str
         minutes: int
-        output: Output
+        output: Output|list
 
     data: Data
 
@@ -144,15 +144,15 @@ class GetResultResponse(BaseSuccessResponse):
         id: str
         type: Optional[str]
         encode: Optional[str]
-        content: bytes
+        content: str|bytes
 
         @pydantic.validator("content")
         @classmethod
-        def validate_content(cls, value: bytes) -> base64.b64decode:
+        def validate_content(cls, value: str) -> bytes:
             """Valdiate content"""
-            if not isinstance(value, bytes):
-                raise ValueError(f'Expected a BytesIO object, found {type(value)}.')
-            return base64.b64decode(value)
+            if isinstance(value, bytes):
+                return value
+            return base64.decodebytes(value.encode('utf-8'))
 
         class Config:
             """Config"""

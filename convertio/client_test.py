@@ -1,6 +1,7 @@
 """ConvertIO Client tests"""
 import unittest
 from unittest import mock
+import base64
 
 import httpx
 
@@ -213,19 +214,22 @@ class TestConvertIOClient(unittest.TestCase):
         payload = parameters.GetResultParameters(
             id="9712d01edc82e49c68d58ae6346d2013",
         )
+        file_content = b"_FILE_CONTENT_"
         expected_output = {
             "code": 200,
             "status": "ok",
             "data": {
                 "id": "9712d01edc82e49c68d58ae6346d2013",
                 "encode": "base64",
-                "content": "_FILE_CONTENT_"
+                "content": base64.b64encode(file_content).decode()
             }
         }
 
         self.mock_request(success=True, expected_output=expected_output)
 
         response = self.convertio_client.get_result_file(payload=payload)
+
+        expected_output["data"]["content"] = file_content # Reset to initial state
 
         self.assertDictEqual(
             response.dict(exclude_none=True),

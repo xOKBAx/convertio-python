@@ -76,7 +76,7 @@ class NewConversionParameters(pydantic.BaseModel):
                                   and callback example here:
                                    https://developers.convertio.co/tr/api/docs/#options_callback
     """
-    file: str
+    file: str|bytes
     filename: Optional[str]
     outputformat: str
     options: Optional[OCRParameters]
